@@ -1,4 +1,5 @@
 using System;
+using FractalPainting.Infrastructure;
 
 namespace FractalPainting.App.Fractals
 {

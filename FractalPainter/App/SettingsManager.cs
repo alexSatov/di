@@ -41,7 +41,6 @@ namespace FractalPainting.App
 		{
 			return new AppSettings
 			{
-				ImagesDirectory = ".",
 				ImageSettings = new ImageSettings()
 			};
 		}
