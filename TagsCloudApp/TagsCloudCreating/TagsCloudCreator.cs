@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Drawing;
 using TagsCloudApp.Config;
@@ -11,22 +12,32 @@ namespace TagsCloudApp.TagsCloudCreating
     public class TagsCloudCreator
     {
         public Settings Settings;
-        public IStatistics Statistics;
         public TagsCloudPainter CloudPainter;
         public IRectangleLayouter CloudLayouter;
+        public IStatisticsCalculator StatisticsCalculator;
 
-        public TagsCloudCreator(IRectangleLayouter cloudLayouter, TagsCloudPainter cloudPainter, IStatistics statistics, Settings settings)
+        public TagsCloudCreator(IRectangleLayouter cloudLayouter, TagsCloudPainter cloudPainter, 
+            IStatisticsCalculator statisticsCalculator, Settings settings)
         {
             Settings = settings;
-            Statistics = statistics;
             CloudPainter = cloudPainter;
             CloudLayouter = cloudLayouter;
+            StatisticsCalculator = statisticsCalculator;
         }
 
-        public Bitmap CreateTagsCloudImage()
+        public Bitmap CreateTagsCloudImage(string textFile)
         {
+            Dictionary<string, int> statistics;
+            try
+            {
+                statistics = StatisticsCalculator.Calculate(File.ReadAllText(textFile));
+            }
+            catch (FileNotFoundException)
+            {
+                throw new ArgumentException("Incorrect filename with text");
+            }
+
             var tags = new List<Tag>();
-            var statistics = Statistics.GetStatistics(Settings.TextFile);
             var mostPopularWords = statistics.OrderByDescending(entry => entry.Value).Take(Settings.MaxTagsCount).ToArray();
 
             var maxTagWeight = mostPopularWords[0].Value;

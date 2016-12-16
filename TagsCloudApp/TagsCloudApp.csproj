@@ -46,6 +46,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -57,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\TagsCloudSection.cs" />
+    <Compile Include="Config\AppConfigSettingsParser.cs" />
     <Compile Include="TagsCloudCreating\TagsCloudCreator.cs" />
     <Compile Include="TagsCloud\CircularCloudLayouter.cs" />
     <Compile Include="TagsCloud\IRectangleLayouter.cs" />
@@ -69,9 +72,8 @@
     <Compile Include="TagsCloudCreating\TagsCloudPainter.cs" />
     <Compile Include="Config\ISettingsParser.cs" />
     <Compile Include="Config\Settings.cs" />
-    <Compile Include="Config\TxtSettingsParser.cs" />
-    <Compile Include="Statistics\IStatistics.cs" />
-    <Compile Include="Statistics\MostCommonWordsStatistics.cs" />
+    <Compile Include="Statistics\IStatisticsCalculator.cs" />
+    <Compile Include="Statistics\MostCommonWordsStatisticsCalculator.cs" />
     <Compile Include="Tests\CircularCloudLayouterTests.cs" />
     <Compile Include="Tests\TagsCloudPainterTests.cs" />
   </ItemGroup>

@@ -1,5 +1,5 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
+using System.Reflection;
 using TagsCloudApp.Config;
 using TagsCloudApp.Statistics;
 using TagsCloudApp.TagsCloud;
@@ -11,54 +11,28 @@ namespace TagsCloudApp
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Введите название файла с изображением");
-            var imageName = Console.ReadLine();
-            var settings = GetSettings();
-            var container = GetContainer(settings);
-
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var tagsCloudCreator = scope.Resolve<TagsCloudCreator>();
-                var image = tagsCloudCreator.CreateTagsCloudImage();
-                TagsCloudSaver.SaveTagsCloudImage(image, imageName);
-            }
+            var textFile = args[0];
+            var imageSaveFile = args[1];
+            var container = GetContainer();
+            
+            var tagsCloudCreator = container.Resolve<TagsCloudCreator>();
+            var image = tagsCloudCreator.CreateTagsCloudImage(textFile);
+            TagsCloudSaver.SaveTagsCloudImage(image, imageSaveFile);
         }
 
-        public static IContainer GetContainer(Settings settings)
+        public static IContainer GetContainer()
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<MostCommonWordsStatistics>().As<IStatistics>();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly());
+
+            builder.RegisterType<AppConfigSettingsParser>().As<ISettingsParser>();
+            builder.Register(c => c.Resolve<ISettingsParser>().ParseSettings());
+
+            builder.RegisterType<MostCommonWordsStatisticsCalculator>().As<IStatisticsCalculator>();
             builder.RegisterType<CircularCloudLayouter>().As<IRectangleLayouter>();
-            builder.RegisterType<Tag>().AsSelf();
-            builder.RegisterType<TagsCloudPainter>().AsSelf();
-            builder.RegisterType<TagsCloudCreator>().AsSelf();
 
             return builder.Build();
-        }
-
-        public static Settings GetSettings()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterType<TxtSettingsParser>().As<ISettingsParser>();
-            builder.Register(c =>
-            {
-                var result = new TxtSettingsParser().ParseSettings("settings.txt");
-                return result;
-            });
-
-
-            var container = builder.Build();
-            Settings settings;
-
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var settingsParser = scope.Resolve<ISettingsParser>();
-                settings = settingsParser.ParseSettings("settings.txt");
-            }
-
-            return settings;
         }
     }
 }

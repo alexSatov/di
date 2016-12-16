@@ -14,8 +14,8 @@ namespace TagsCloudApp.TagsCloudCreating
 
         public TagsCloudPainter(Settings settings)
         {
-            Pen = new Pen(Color.DarkOrange, 3);
-            BackgroundColor = Color.DarkSlateBlue;
+            Pen = new Pen(settings.TagColor, 3);
+            BackgroundColor = settings.BackgrondColor;
             CreateNewImage(settings.ImageSize);
         }
 
