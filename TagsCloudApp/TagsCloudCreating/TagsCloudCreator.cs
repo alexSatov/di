@@ -27,46 +27,39 @@ namespace TagsCloudApp.TagsCloudCreating
         public Bitmap CreateTagsCloudImage(string text)
         {
             var statistics = StatisticsCalculator.Calculate(text);
-            
-            var mostPopularWords = statistics.OrderByDescending(entry => entry.Value).Take(Settings.MaxTagsCount).ToArray();
-            var tagWeightRange = GetTagWeightRange(mostPopularWords);
-            var tags = GetAllPuttedTags(mostPopularWords, tagWeightRange);
+            if (statistics.Count == 0)
+                throw new ArgumentException("Text without words for statistics");
 
+            var mostPopularWords = statistics.OrderByDescending(entry => entry.Value).Take(Settings.MaxTagsCount).ToArray();
+            var tags = GetAllTags(mostPopularWords);
             CloudPainter.DrawTags(tags);
             return CloudPainter.Image;
         }
 
-        public Tuple<int, int> GetTagWeightRange(KeyValuePair<string, int>[] statisticsWords)
-        {
-            try
-            {
-                var maxTagWeight = statisticsWords[0].Value;
-                var minTagWeight = statisticsWords.Last().Value;
-                return Tuple.Create(minTagWeight, maxTagWeight);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                throw new ArgumentException("Text without words for statistics");
-            }
-        }
-
-        public List<Tag> GetAllPuttedTags(KeyValuePair<string, int>[] statisticsWords, Tuple<int, int> tagWeightRange)
+        public List<Tag> GetAllTags(KeyValuePair<string, int>[] statisticsWords)
         {
             var tags = new List<Tag>();
+            var maxTagWeight = statisticsWords[0].Value;
+            var minTagWeight = statisticsWords.Last().Value;
+
             foreach (var pair in statisticsWords)
             {
-                var tag = new Tag(pair.Key, new Font(Settings.Font, GetFontSize(pair.Value, tagWeightRange, Settings.FontSizeRange)));
+                var font = new Font(Settings.Font, GetFontSize(pair.Value, minTagWeight, maxTagWeight, 
+                    Settings.MinFontSize, Settings.MaxFontSize));
+
+                var tag = new Tag(pair.Key, font);
                 tag.Area = CloudLayouter.PutNextRectangle(tag.TagSize);
                 tags.Add(tag);
             }
             return tags;
         }
 
-        public int GetFontSize(int currentTagWeight, Tuple<int, int> tagWeightRange, Tuple<int, int> fontSizeRange)
+        public int GetFontSize(int currentTagWeight, int minTagWeight, int maxTagWeight, int minFontSize, int maxFontSize)
         {
-            if (tagWeightRange.Item1 == tagWeightRange.Item2) return fontSizeRange.Item1;
-            return fontSizeRange.Item1 + (currentTagWeight - tagWeightRange.Item1) *
-                (fontSizeRange.Item2 - fontSizeRange.Item1) / (tagWeightRange.Item2 - tagWeightRange.Item1);
+            if (minTagWeight == maxTagWeight)
+                return minFontSize;
+
+            return minFontSize + (currentTagWeight - minTagWeight) * (maxFontSize - minFontSize) / (maxTagWeight - minTagWeight);
         }
     }
 }

@@ -81,6 +81,8 @@
     <Compile Include="Statistics\MostCommonWordsStatisticsCalculator.cs" />
     <Compile Include="Tests\CircularCloudLayouterTests.cs" />
     <Compile Include="Tests\TagsCloudPainterTests.cs" />
+    <Compile Include="TextReaders\IFileReader.cs" />
+    <Compile Include="TextReaders\TxtFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

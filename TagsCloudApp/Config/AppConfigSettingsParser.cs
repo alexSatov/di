@@ -12,12 +12,13 @@ namespace TagsCloudApp.Config
             return new Settings
             {
                 Font = config.Font.Name,
+                TagColor = config.Color.Tag,
+                MinFontSize = config.Font.MinSize,
+                MaxFontSize = config.Font.MaxSize,
                 MaxTagsCount = config.MaxTagsCount,
-                FontSizeRange = new Tuple<int, int>(config.Font.MinSize, config.Font.MaxSize),
-                ImageSize = new Size(config.ImageSize.Width, config.ImageSize.Height),
+                BackgrondColor = config.Color.Background,
                 CenterPoint = new Point(config.CenterPoint.X, config.CenterPoint.Y),
-                BackgrondColor = ColorTranslator.FromHtml("#" + config.Color.Background),
-                TagColor = ColorTranslator.FromHtml("#" + config.Color.Tag)
+                ImageSize = new Size(config.ImageSize.Width, config.ImageSize.Height)
             };
         }
     }
