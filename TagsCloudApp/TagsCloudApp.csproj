@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Argparser.cs" />
+    <Compile Include="BadWords\BoringWordsFilter.cs" />
+    <Compile Include="BadWords\IWordsFilter.cs" />
     <Compile Include="Config\TagsCloudSection.cs" />
     <Compile Include="Config\AppConfigSettingsParser.cs" />
     <Compile Include="TagsCloudCreating\TagsCloudCreator.cs" />

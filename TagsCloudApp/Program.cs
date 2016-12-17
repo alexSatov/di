@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using TagsCloudApp.Config;
+using TagsCloudApp.BadWords;
 using TagsCloudApp.Layouter;
 using TagsCloudApp.Statistics;
 using TagsCloudApp.TextReaders;
@@ -17,11 +18,13 @@ namespace TagsCloudApp
         {
             UserOptions = Argparser.Parse(args);
 
+            var container = GetContainer();
             var textFile = UserOptions.TextFile;
             var imageSaveFile = UserOptions.ImageSaveFile;
-            var container = GetContainer();
-            var tagsCloudCreator = container.Resolve<TagsCloudCreator>();
+
             var fileReader = container.Resolve<IFileReader>();
+            var tagsCloudCreator = container.Resolve<TagsCloudCreator>();
+
             var text = fileReader.ReadTextFromFile(textFile);
             var image = tagsCloudCreator.CreateTagsCloudImage(text);
 
@@ -38,6 +41,7 @@ namespace TagsCloudApp
 
             builder.RegisterType<MostCommonWordsStatisticsCalculator>().As<IStatisticsCalculator>();
             builder.RegisterType<CircularCloudLayouter>().As<IRectangleLayouter>();
+            builder.RegisterType<BoringWordsFilter>().As<IWordsFilter>();
             builder.RegisterType<TxtFileReader>().As<IFileReader>();
 
             return builder.Build();
