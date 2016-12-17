@@ -8,7 +8,7 @@ namespace TagsCloudApp.Config
     {
         public Settings ParseSettings()
         {
-            var config = (TagsCloudSection) ConfigurationManager.GetSection("tagsCloudGroup/tagsCloud");
+            var config = (TagsCloudSection) ConfigurationManager.GetSection("tagsCloud");
             return new Settings
             {
                 Font = config.Font.Name,

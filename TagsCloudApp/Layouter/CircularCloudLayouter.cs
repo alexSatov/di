@@ -4,7 +4,7 @@ using System.Drawing;
 using TagsCloudApp.Config;
 using System.Collections.Generic;
 
-namespace TagsCloudApp.TagsCloud
+namespace TagsCloudApp.Layouter
 {
     public class CircularCloudLayouter : IRectangleLayouter
     {

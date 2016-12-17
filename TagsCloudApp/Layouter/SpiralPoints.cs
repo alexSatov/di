@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace TagsCloudApp.TagsCloud
+namespace TagsCloudApp.Layouter
 {
     public class SpiralPoints : IEnumerable<Point>
     {

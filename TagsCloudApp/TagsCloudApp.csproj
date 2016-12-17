@@ -37,6 +37,10 @@
       <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentAssert, Version=1.0.0.11, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssert.1.0.0.11\lib\FluentAssert.dll</HintPath>
       <Private>True</Private>
@@ -58,13 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Argparser.cs" />
     <Compile Include="Config\TagsCloudSection.cs" />
     <Compile Include="Config\AppConfigSettingsParser.cs" />
     <Compile Include="TagsCloudCreating\TagsCloudCreator.cs" />
-    <Compile Include="TagsCloud\CircularCloudLayouter.cs" />
-    <Compile Include="TagsCloud\IRectangleLayouter.cs" />
-    <Compile Include="TagsCloud\RectangleExtensions.cs" />
-    <Compile Include="TagsCloud\SpiralPoints.cs" />
+    <Compile Include="Layouter\CircularCloudLayouter.cs" />
+    <Compile Include="Layouter\IRectangleLayouter.cs" />
+    <Compile Include="Layouter\RectangleExtensions.cs" />
+    <Compile Include="Layouter\SpiralPoints.cs" />
     <Compile Include="TagsCloudCreating\TagsCloudSaver.cs" />
     <Compile Include="TagsCloudCreating\Tag.cs" />
     <Compile Include="Program.cs" />

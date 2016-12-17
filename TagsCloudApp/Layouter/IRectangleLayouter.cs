@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Collections.Generic;
 
-namespace TagsCloudApp.TagsCloud
+namespace TagsCloudApp.Layouter
 {
     public interface IRectangleLayouter
     {
