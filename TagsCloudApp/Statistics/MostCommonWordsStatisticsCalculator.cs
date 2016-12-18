@@ -17,9 +17,7 @@ namespace TagsCloudApp.Statistics
 
         public Dictionary<string, int> Calculate(string text)
         {
-            return Regex.Split(text, @"\W+")
-                .Select(w => w.ToLower())
-                .Where(w => w.Length > 2 && wordsFilter.IsCorrectWord(w))
+            return wordsFilter.Filter(Regex.Split(text, @"\W+"))
                 .GroupBy(w => w, StringComparer.InvariantCultureIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.Count());
         }

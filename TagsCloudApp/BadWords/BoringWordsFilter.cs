@@ -42,9 +42,11 @@ namespace TagsCloudApp.BadWords
             return filterFiles;
         }
 
-        public bool IsCorrectWord(string word)
+        public IEnumerable<string> Filter(IEnumerable<string> words)
         {
-            return !BoringWords.Contains(word);
+            return words
+                .Select(w => w.ToLower())
+                .Where(w => w.Length > 2 && !BoringWords.Contains(w));
         }
     }
 }

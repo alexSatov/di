@@ -1,7 +1,9 @@
-﻿namespace TagsCloudApp.BadWords
+﻿using System.Collections.Generic;
+
+namespace TagsCloudApp.BadWords
 {
     public interface IWordsFilter
     {
-        bool IsCorrectWord(string word);
+        IEnumerable<string> Filter(IEnumerable<string> words);
     }
 }
