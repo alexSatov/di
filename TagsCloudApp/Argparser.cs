@@ -25,6 +25,9 @@ namespace TagsCloudApp
         [Option('i', "imagesavefile", Required = true, HelpText = "File name in which image will be saved")]
         public string ImageSaveFile { get; set; }
 
+        [Option('p', "wordFiltersPath", HelpText = "File/Dir path to file/files with words to filter")]
+        public string WordFiltersPath { get; set; }
+
         [Option('w', "wigth", HelpText = "Width of image")]
         public int Width { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Configuration;
 
 namespace TagsCloudApp.Config
@@ -16,6 +15,7 @@ namespace TagsCloudApp.Config
                 MinFontSize = config.Font.MinSize,
                 MaxFontSize = config.Font.MaxSize,
                 MaxTagsCount = config.MaxTagsCount,
+                WordsFilterPath = config.WordFiltersPath,
                 BackgrondColor = config.Color.Background,
                 CenterPoint = new Point(config.CenterPoint.X, config.CenterPoint.Y),
                 ImageSize = new Size(config.ImageSize.Width, config.ImageSize.Height)

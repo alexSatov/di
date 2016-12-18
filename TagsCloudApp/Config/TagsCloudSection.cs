@@ -7,6 +7,9 @@ namespace TagsCloudApp.Config
         [ConfigurationProperty("maxTagsCount", DefaultValue = "100")]
         public int MaxTagsCount => (int)this["maxTagsCount"];
 
+        [ConfigurationProperty("wordFiltersPath", DefaultValue = "BoringWords")]
+        public string WordFiltersPath => (string)this["wordFiltersPath"];
+
         [ConfigurationProperty("font")]
         public FontElement Font => (FontElement)this["font"];
 

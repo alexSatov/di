@@ -12,5 +12,6 @@ namespace TagsCloudApp.Config
         public int MaxTagsCount { get; set; }
         public Point CenterPoint { get; set; }
         public string BackgrondColor { get; set; }
+        public string WordsFilterPath { get; set; }
     }
 }

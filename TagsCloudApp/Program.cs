@@ -60,6 +60,7 @@ namespace TagsCloudApp
             settings.Font = UserOptions.Font ?? settings.Font;
             settings.TagColor = UserOptions.TagColor ?? settings.TagColor;
             settings.BackgrondColor = UserOptions.BackgroundColor ?? settings.BackgrondColor;
+            settings.WordsFilterPath = UserOptions.WordFiltersPath ?? settings.WordsFilterPath;
             settings.MinFontSize = UserOptions.MinFontSize != 0 ? UserOptions.MinFontSize : settings.MinFontSize;
             settings.MaxFontSize = UserOptions.MaxFontSize != 0 ? UserOptions.MaxFontSize : settings.MaxFontSize;
             settings.MaxTagsCount = UserOptions.MaxTagsCount != 0 ? UserOptions.MaxTagsCount : settings.MaxTagsCount;

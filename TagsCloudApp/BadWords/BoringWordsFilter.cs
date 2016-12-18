@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
+using TagsCloudApp.Config;
 using TagsCloudApp.TextReaders;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -7,35 +9,42 @@ namespace TagsCloudApp.BadWords
 {
     public class BoringWordsFilter : IWordsFilter
     {
-        public readonly HashSet<string> Prepositions;
-        public readonly HashSet<string> Pronouns;
-        public readonly HashSet<string> Unions;
+        public readonly HashSet<string> BoringWords;
 
-        public BoringWordsFilter(IFileReader fileReader)
+        public BoringWordsFilter(IFileReader fileReader, Settings settings)
         {
-            string[] prepositions;
-            string[] pronouns;
-            string[] unions;
+            var path = settings.WordsFilterPath;
+            var filterFiles = GetFilterFiles(path);
+            var boringWords = GetAllBoringWords(filterFiles, fileReader);
+            BoringWords = new HashSet<string>(boringWords);
+        }
 
-            try
-            {
-                prepositions = Regex.Split(fileReader.ReadTextFromFile("BoringWords/prepositions.txt"), @"\W+");
-                pronouns = Regex.Split(fileReader.ReadTextFromFile("BoringWords/pronouns.txt"), @"\W+");
-                unions = Regex.Split(fileReader.ReadTextFromFile("BoringWords/unions.txt"), @"\W+");
-            }
-            catch (FileNotFoundException)
-            {
-                throw new FileNotFoundException("File with boring words is missing");
-            }
+        private static IEnumerable<string> GetAllBoringWords(IEnumerable<string> files, IFileReader fileReader)
+        {
+            IEnumerable<string> boringWords = new List<string>();
+            boringWords = files
+                .Select(fileReader.ReadTextFromFile)
+                .Aggregate(boringWords, (current, words) => current.Concat(Regex.Split(words, @"\W+")));
+            return boringWords;
+        }
 
-            Unions = new HashSet<string>(unions);
-            Pronouns = new HashSet<string>(pronouns);
-            Prepositions = new HashSet<string>(prepositions);
+        private static IEnumerable<string> GetFilterFiles(string path)
+        {
+            var filterFiles = new List<string>();
+
+            if (Directory.Exists(path))
+                filterFiles.AddRange(Directory.GetFiles(path));
+            else if (File.Exists(path))
+                filterFiles.Add(path);
+            else
+                throw new FileNotFoundException("File/Dir with boring words is missing");
+
+            return filterFiles;
         }
 
         public bool IsCorrectWord(string word)
         {
-            return !Prepositions.Contains(word) && !Pronouns.Contains(word) && !Unions.Contains(word);
+            return !BoringWords.Contains(word);
         }
     }
 }
