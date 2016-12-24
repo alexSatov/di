@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using System.Drawing;
 using System.Reflection;
 using TagsCloudApp.Config;
@@ -16,19 +17,26 @@ namespace TagsCloudApp
 
         public static void Main(string[] args)
         {
-            UserOptions = Argparser.Parse(args);
+            try
+            {
+                UserOptions = Argparser.Parse(args).GetValueOrThrow();
 
-            var container = GetContainer();
-            var textFile = UserOptions.TextFile;
-            var imageSaveFile = UserOptions.ImageSaveFile;
+                var container = GetContainer();
+                var textFile = UserOptions.TextFile;
+                var imageSaveFile = UserOptions.ImageSaveFile;
 
-            var fileReader = container.Resolve<IFileReader>();
-            var tagsCloudCreator = container.Resolve<TagsCloudCreator>();
+                var fileReader = container.Resolve<IFileReader>();
+                var tagsCloudCreator = container.Resolve<TagsCloudCreator>();
 
-            var text = fileReader.ReadTextFromFile(textFile);
-            var image = tagsCloudCreator.CreateTagsCloudImage(text);
+                var text = fileReader.ReadTextFromFile(textFile).GetValueOrThrow();
+                var image = tagsCloudCreator.CreateTagsCloudImage(text);
 
-            TagsCloudSaver.SaveTagsCloudImage(image, imageSaveFile);
+                TagsCloudSaver.SaveTagsCloudImage(image, imageSaveFile);
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public static IContainer GetContainer()
@@ -37,7 +45,10 @@ namespace TagsCloudApp
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly());
             builder.RegisterType<AppConfigSettingsParser>().As<ISettingsParser>();
-            builder.Register(c => ConcatWithUserOptions(c.Resolve<ISettingsParser>().ParseSettings()));
+            builder.Register(
+                c => ConcatWithUserOptions(
+                    c.Resolve<ISettingsParser>().ParseSettings().GetValueOrThrow())
+            );
 
             builder.RegisterType<MostCommonWordsStatisticsCalculator>().As<IStatisticsCalculator>();
             builder.RegisterType<CircularCloudLayouter>().As<IRectangleLayouter>();

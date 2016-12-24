@@ -1,20 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace TagsCloudApp.TextReaders
 {
     public class TxtFileReader : IFileReader
     {
-        public string ReadTextFromFile(string filename)
+        public Result<string> ReadTextFromFile(string filename)
         {
-            try
-            {
-                return File.ReadAllText(filename);
-            }
-            catch (FileNotFoundException)
-            {
-                throw new ArgumentException("File with this name not exist");
-            }
+            return Result.Of(() => File.ReadAllText(filename))
+                .ReplaceError(e => "File with this name not exist");
         }
     }
 }

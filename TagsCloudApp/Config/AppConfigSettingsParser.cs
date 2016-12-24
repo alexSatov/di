@@ -5,9 +5,14 @@ namespace TagsCloudApp.Config
 {
     public class AppConfigSettingsParser : ISettingsParser
     {
-        public Settings ParseSettings()
+        public Result<Settings> ParseSettings()
         {
-            var config = (TagsCloudSection) ConfigurationManager.GetSection("tagsCloud");
+            return Result.Of(GetSettingsFromSection).ReplaceError(e => "Can't get settings section");
+        }
+
+        private static Settings GetSettingsFromSection()
+        {
+            var config = (TagsCloudSection)ConfigurationManager.GetSection("tagsCloud");
             return new Settings
             {
                 Font = config.Font.Name,

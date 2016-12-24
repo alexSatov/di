@@ -73,7 +73,7 @@ namespace TagsCloudApp.Tests
         {
             if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
             {
-                var settings = new AppConfigSettingsParser().ParseSettings();
+                var settings = new AppConfigSettingsParser().ParseSettings().Value;
                 settings.ImageSize = new Size(1000, 1000);
                 var cloudPainter = new TagsCloudPainter(settings);
                 var dir = TestContext.CurrentContext.TestDirectory + "\\FailedTests\\";

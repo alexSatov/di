@@ -1,19 +1,15 @@
-﻿using System;
-using CommandLine;
+﻿using CommandLine;
 using CommandLine.Text;
 
 namespace TagsCloudApp
 {
     public static class Argparser
     {
-        public static Options Parse(string[] args)
+        public static Result<Options> Parse(string[] args)
         {
             var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                throw new ArgumentException("Incorrect command line arguments");
-            }
-            return options;
+            return Parser.Default.ParseArguments(args, options) ? 
+                options : Result.Fail<Options>("Incorrect command line arguments");
         }
     }
 

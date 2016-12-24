@@ -11,7 +11,7 @@ namespace TagsCloudApp.Tests
     [TestFixture]
     public class TagsCloudPainter_should
     {
-        private static Settings settings = new AppConfigSettingsParser().ParseSettings();
+        private static readonly Settings settings = new AppConfigSettingsParser().ParseSettings().Value;
 
         [Test]
         public void drawingOnlyPositivePoints()

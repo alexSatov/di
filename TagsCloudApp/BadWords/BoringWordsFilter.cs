@@ -14,32 +14,10 @@ namespace TagsCloudApp.BadWords
         public BoringWordsFilter(IFileReader fileReader, Settings settings)
         {
             var path = settings.WordsFilterPath;
-            var filterFiles = GetFilterFiles(path);
-            var boringWords = GetAllBoringWords(filterFiles, fileReader);
-            BoringWords = new HashSet<string>(boringWords);
-        }
-
-        private static IEnumerable<string> GetAllBoringWords(IEnumerable<string> files, IFileReader fileReader)
-        {
-            IEnumerable<string> boringWords = new List<string>();
-            boringWords = files
-                .Select(fileReader.ReadTextFromFile)
-                .Aggregate(boringWords, (current, words) => current.Concat(Regex.Split(words, @"\W+")));
-            return boringWords;
-        }
-
-        private static IEnumerable<string> GetFilterFiles(string path)
-        {
-            var filterFiles = new List<string>();
-
-            if (Directory.Exists(path))
-                filterFiles.AddRange(Directory.GetFiles(path));
-            else if (File.Exists(path))
-                filterFiles.Add(path);
-            else
-                throw new FileNotFoundException("File/Dir with boring words is missing");
-
-            return filterFiles;
+            //var filterFiles = GetFilterFiles(path).GetValueOrThrow();
+            var boringWords = GetFilterFiles(path)
+                .Then(f => GetAllBoringWords(f, fileReader));
+            BoringWords = boringWords.IsSuccess ? new HashSet<string>(boringWords.Value) : new HashSet<string>();
         }
 
         public IEnumerable<string> Filter(IEnumerable<string> words)
@@ -47,6 +25,29 @@ namespace TagsCloudApp.BadWords
             return words
                 .Select(w => w.ToLower())
                 .Where(w => w.Length > 2 && !BoringWords.Contains(w));
+        }
+
+        private static IEnumerable<string> GetAllBoringWords(IEnumerable<string> files, IFileReader fileReader)
+        {
+            IEnumerable<string> boringWords = new List<string>();
+            boringWords = files
+                .Select(f => fileReader.ReadTextFromFile(f).GetValueOrThrow())
+                .Aggregate(boringWords, (current, words) => current.Concat(Regex.Split(words, @"\W+")));
+            return boringWords;
+        }
+
+        private static Result<List<string>> GetFilterFiles(string path)
+        {
+            var filterFiles = new List<string>();
+
+            if (Directory.Exists(path))
+                filterFiles.AddRange(Directory.GetFiles(path));
+            if (File.Exists(path))
+                filterFiles.Add(path);
+
+            return filterFiles.Count != 0
+                ? Result.Of(() => filterFiles)
+                : Result.Fail<List<string>>("File / Dir with boring words isn't exist");
         }
     }
 }

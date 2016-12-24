@@ -2,6 +2,6 @@
 {
     public interface ISettingsParser
     {
-        Settings ParseSettings();
+        Result<Settings> ParseSettings();
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="BadWords\IWordsFilter.cs" />
     <Compile Include="Config\TagsCloudSection.cs" />
     <Compile Include="Config\AppConfigSettingsParser.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="TagsCloudCreating\TagsCloudCreator.cs" />
     <Compile Include="Layouter\CircularCloudLayouter.cs" />
     <Compile Include="Layouter\IRectangleLayouter.cs" />
